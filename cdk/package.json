@@ -27,7 +27,7 @@
     "@aws-cdk/aws-lambda": "^1.203.0",
     "@aws-cdk/aws-s3": "^1.203.0",
     "@aws-cdk/aws-sagemaker": "^1.203.0",
-    "aws-cdk-lib": "2.164.1",
+    "aws-cdk-lib": "2.177.0",
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.21"
   }
