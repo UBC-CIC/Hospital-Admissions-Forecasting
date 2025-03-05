@@ -1,54 +1,84 @@
-import * as cdk from "aws-cdk-lib";
-import { Construct } from "constructs";
-import * as sagemaker from "aws-cdk-lib/aws-sagemaker";
-import * as iam from "aws-cdk-lib/aws-iam";
+import * as cdk from 'aws-cdk-lib';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as s3n from 'aws-cdk-lib/aws-s3-notifications';
+import * as iam from 'aws-cdk-lib/aws-iam';
+import { Construct } from 'constructs';
 
 export class SageMakerEndpointStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // Create IAM Role for SageMaker (Ensuring Correct Account)
-    const sagemakerRole = new iam.Role(this, "SageMakerExecutionRole", {
-      assumedBy: new iam.ServicePrincipal("sagemaker.amazonaws.com"),
-      managedPolicies: [
-        iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonS3FullAccess"),
-        iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonSageMakerFullAccess"),
-      ],
+    // Create (or reference) the S3 bucket that will store your model file.
+    const modelBucket = new s3.Bucket(this, 'ModelBucket', {
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
     });
 
-    // Allow SageMaker to Pass the Role
-    sagemakerRole.addToPolicy(
+
+    const sagemakerExecutionRole = new iam.Role(this, 'SageMakerExecutionRole', {
+      assumedBy: new iam.ServicePrincipal('sagemaker.amazonaws.com'),
+    });
+
+    sagemakerExecutionRole.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonS3ReadOnlyAccess'));
+    sagemakerExecutionRole.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSageMakerFullAccess'));
+    sagemakerExecutionRole.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonEC2ContainerRegistryReadOnly'));
+
+    // Ensure SageMaker can assume the role
+    sagemakerExecutionRole.assumeRolePolicy?.addStatements(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["iam:PassRole"],
-        resources: [sagemakerRole.roleArn],
+        principals: [new iam.ServicePrincipal('sagemaker.amazonaws.com')],
+        actions: ['sts:AssumeRole'],
       })
     );
+    
 
-    //  Create SageMaker Model
-    const sagemakerModel = new sagemaker.CfnModel(this, "SageMakerModel", {
-      executionRoleArn: sagemakerRole.roleArn,
-      primaryContainer: {
-        image: "341280168497.dkr.ecr.ca-central-1.amazonaws.com/sagemaker-scikit-learn:0.23-1-cpu-py3",
-        modelDataUrl: "s3://my-bucket/model.tar.gz",
+
+    // Define the Lambda function that deploys the model to SageMaker.
+    const deployModelLambda = new lambda.Function(this, 'DeployModelLambda', {
+      runtime: lambda.Runtime.PYTHON_3_9,
+      handler: 'deploy_model.lambda_handler'
+      , // The file deploy_model.py with lambda_handler function
+      code: lambda.Code.fromAsset('lambda/inference')
+      , // Directory containing your Lambda code
+      environment: {
+        MODEL_BUCKET: modelBucket.bucketName,
+        MODEL_KEY: 'model.tar.gz',
+        SAGEMAKER_EXECUTION_ROLE: sagemakerExecutionRole.roleArn,
+        AWS_SDK_LOAD_CONFIG: '1',
+        SAGEMAKER_PROGRAM: 'inference.py',
       },
+      timeout: cdk.Duration.minutes(5)
     });
 
-    // Create SageMaker Endpoint Config
-    const endpointConfig = new sagemaker.CfnEndpointConfig(this, "SageMakerEndpointConfig", {
-      productionVariants: [
-        {
-          modelName: sagemakerModel.attrModelName,
-          instanceType: "ml.m5.large",
-          initialInstanceCount: 1,
-          variantName: "AllTraffic",
-        },
+    // Grant Lambda read access to the S3 bucket.
+    modelBucket.grantRead(deployModelLambda);
+
+    // Allow Lambda to call SageMaker APIs.
+    deployModelLambda.addToRolePolicy(new iam.PolicyStatement({
+      actions: [
+        'sagemaker:CreateModel',
+        'sagemaker:CreateEndpointConfig',
+        'sagemaker:CreateEndpoint',
+        'sagemaker:DescribeEndpoint',
+        'iam:PassRole',
       ],
-    });
+      resources: ['*'],
+    }));
 
-    // Create SageMaker Endpoint
-    new sagemaker.CfnEndpoint(this, "SageMakerEndpoint", {
-      endpointConfigName: endpointConfig.attrEndpointConfigName,
-    });
+    deployModelLambda.addToRolePolicy(new iam.PolicyStatement({
+      actions: ['iam:PassRole'],
+      resources: [sagemakerExecutionRole.roleArn],
+    }));
+    
+
+    // Configure an S3 event notification to trigger the Lambda when a new model file is uploaded.
+    modelBucket.addEventNotification(
+      s3.EventType.OBJECT_CREATED,
+      new s3n.LambdaDestination(deployModelLambda),
+      { suffix: 'model.tar.gz' }
+    );
   }
 }
+
