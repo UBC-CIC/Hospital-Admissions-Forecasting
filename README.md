@@ -34,7 +34,7 @@ The following architecture diagram illustrates the various AWS components utiliz
 
 ## Training and Experimentation
 
-This solution enables users with ML knowledge to fine-tune and test out different models using Sagemaker Notebooks. For details, please refer to the [Training and Experimentation Guide](.docs/Training-and-experimentation-guide.pdf).
+This solution enables users with ML knowledge to fine-tune and test out different models using Sagemaker Notebooks. For details, please refer to the [Training and Experimentation Guide](./docs/Training-and-experimentation-guide.pdf).
 
 ## Deployment Guide
 
