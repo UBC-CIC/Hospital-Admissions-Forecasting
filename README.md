@@ -59,9 +59,6 @@ Here you can learn about the API the project uses: [API Documentation](./docs/ap
 
 N/A
 
-## Credits
-
-This application was architected and developed by Rohit Murali, Khushi Narang and Amy Cao with support from the UBC CIC.
 
 ## Credits
 
