@@ -62,7 +62,7 @@ N/A
 
 ## Credits
 
-This application was architected and developed by [Rohit Murali](https://www.linkedin.com/in/rohit-murali-92079a119/), [Khushi Narang](https://www.linkedin.com/in/khushi-narang-2029a9213), with project assistance and front-end development support by [Amy Cao](https://www.linkedin.com/in/amy-c-2313121b1/). Thanks to the UBC Cloud Innovation Centre Technical and Project Management teams for their guidance and support.
+This application was architected and developed by [Rohit Murali](https://www.linkedin.com/in/muralirohit), [Khushi Narang](https://www.linkedin.com/in/khushi-narang-2029a9213), with project assistance and front-end development support by [Amy Cao](https://www.linkedin.com/in/amy-c-2313121b1/). Thanks to the UBC Cloud Innovation Centre Technical and Project Management teams for their guidance and support.
 
 ## License
 
