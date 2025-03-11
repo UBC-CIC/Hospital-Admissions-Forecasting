@@ -1,7 +1,7 @@
 
 # Hospital Admissions Forecasting
 
-This project involves a classical machine learning (ML) model to predict hospital admissions using data collected in an Emergency Room (ER).
+This project involves a machine learning (ML) model to predict hospital admissions using data collected in an Emergency Room (ER).
 
 
 | Index                                               | Description                                             |
