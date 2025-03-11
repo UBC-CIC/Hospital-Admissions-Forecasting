@@ -29,7 +29,7 @@ The solution utilises AWS resources to host a trained ML model and provide a das
 
 The following architecture diagram illustrates the various AWS components utilized to deliver the solution.
 
-![Architecture Diagram](docs/images/architecture.jpg)
+![Architecture Diagram](./docs/images/architecture.jpg)
 
 
 ## Training and Experimentation
