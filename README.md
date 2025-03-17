@@ -49,7 +49,19 @@ Please refer to the [Interface Guide](./docs/interfaceGuide.md) for instructions
 
 ## Directories
 
-To be completed
+├── cdk
+│   ├── bin
+│   ├── lambda
+│   ├── layers
+│   ├── lib
+├── docs
+└── frontend
+    ├── public
+    └── src
+        ├── assets
+        ├── components
+        ├── functions
+        └── pages
 
 ## API Documentation
 
