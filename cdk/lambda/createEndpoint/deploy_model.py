@@ -31,21 +31,6 @@ def lambda_handler(event, context):
     
     print(" SageMaker model started:")
 
-    # Create an endpoint configuration using Serverless Inference settings.
-    # sagemaker_client.create_endpoint_config(
-    #     EndpointConfigName=endpoint_config_name,
-    #     ProductionVariants=[
-    #         {
-    #             'VariantName': 'AllTraffic',
-    #             'ModelName': model_name,
-    #             'ServerlessConfig': {
-    #                 'MemorySizeInMB': 2048,   # Adjust memory as needed
-    #                 'MaxConcurrency': 5       # Adjust concurrency as needed
-    #             }
-    #         }
-    #     ]
-    # )
-
     sagemaker_client.create_endpoint_config(
     EndpointConfigName=endpoint_config_name,
     ProductionVariants=[
