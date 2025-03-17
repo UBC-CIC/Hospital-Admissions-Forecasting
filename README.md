@@ -49,6 +49,8 @@ Please refer to the [Interface Guide](./docs/interfaceGuide.md) for instructions
 
 ## Directories
 
+```
+
 ├── cdk
 │   ├── bin
 │   ├── lambda
@@ -62,6 +64,22 @@ Please refer to the [Interface Guide](./docs/interfaceGuide.md) for instructions
         ├── components
         ├── functions
         └── pages
+```
+
+1. `/cdk`: Contains the deployment code for the app's AWS infrastructure
+    - `/bin`: Contains the instantiation of CDK stack
+   course when files are uploaded or deleted.
+    - `/lambda`: Contains the lambda functions for the project
+    - `/layers`: Contains the required layers for lambda functions
+    - `/lib`: Contains the deployment code for all infrastructure stacks
+2. `/docs`: Contains documentation for the application
+3. `/frontend`: Contains the user interface of the application
+    - `/public`: public assets used in the application
+    - `/src`: contains the frontend code of the application
+        - `/assets`: Contains assets used in the application
+        - `/components`: Contains components used in the application
+        - `/functions`: Contains utility functions used in the application
+        - `/pages`: Contains pages used in the application
 
 ## API Documentation
 
