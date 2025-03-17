@@ -50,9 +50,15 @@ new LambdaStack(app, `${resourcePrefix}-LambdaStack`, {
   env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
 });
 
-// 🌟 Create Standalone Lambda + API Gateway Stack
-new ApiStack(app, `${resourcePrefix}-ApiStack`, {
-  env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
+// // 🌟 Create Standalone Lambda + API Gateway Stack
+// new ApiStack(app, `${resourcePrefix}-ApiStack`, {
+//   env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
+// });
+
+new ApiStack(app, 'ApiStack', {
+  dbCluster: auroraStack.dbCluster, // Pass the entire Aurora cluster
+  dbSecret: auroraStack.secret,   // Pass the database secret
+  vpc: auroraStack.vpc,
 });
 
 // 🌟 Create Standalone Lambda + API Gateway Stack
