@@ -8,6 +8,9 @@ import { ApiStack } from "../lib/ApiStack";
 import { SageMakerEndpointStack } from "../lib/SageMakerEndpoint";
 import { PatientDataStack } from "../lib/PatientData"; 
 import { LambdaStack } from "../lib/Lambda";
+import { DatabaseStack } from '../lib/DatabaseStack';
+import { InferenceLambdaStack } from '../lib/InferenceLambdaStack';
+
 
 
 import { Tags } from "aws-cdk-lib";
@@ -22,16 +25,25 @@ new VpcStack(app, `${resourcePrefix}-VpcStack`, {
   env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
 });
 
+const auroraStack = new DatabaseStack(app, 'AuroraDatabaseStack');
+
+
 // 🌟 Create Standalone SageMaker Stack
 new SageMakerTrainingStack(app, `${resourcePrefix}-SageMakerTrainingStack`, {
   env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
 });
 
 
-// 🌟 Create Standalone SageMaker Stack
-new SageMakerEndpointStack(app, `${resourcePrefix}-SageMakerEndpointStack`, {
+// // // 🌟 Create Standalone SageMaker Stack
+// new SageMakerEndpointStack(app, `${resourcePrefix}-SageMakerEndpointStack`, {
+//   env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
+// });
+
+// Creating an instance of the stack
+const sageMakerEndpointStack = new SageMakerEndpointStack(app, `${resourcePrefix}-SageMakerEndpointStack`, {
   env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
 });
+
 
 // 🌟 Create Standalone SageMaker Stack
 new LambdaStack(app, `${resourcePrefix}-LambdaStack`, {
@@ -48,12 +60,19 @@ new PatientDataStack(app, `${resourcePrefix}-PatientDataStack`, {
   env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
 });
 
+new InferenceLambdaStack(app, 'InferenceLambdaStack', {
+    sagemakerEndpointName: sageMakerEndpointStack.sagemakerEndpointName, //  FIXED
+    dbCluster: auroraStack.dbCluster,
+    dbSecret: auroraStack.secret,
+    vpc: auroraStack.vpc,
+});
+
 // // 🌟 Create Standalone Amplify Stack
 // new AmplifyStack(app, `${resourcePrefix}-AmplifyStack`, {
 //   env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
 // });
 
-// 📌 Add Tags for easier AWS resource management
+//  Add Tags for easier AWS resource management
 Tags.of(app).add("Project", "HaltonHealthcare-ML");
 Tags.of(app).add("Environment", "Production");
 Tags.of(app).add("Owner", "UBC-CIC");
