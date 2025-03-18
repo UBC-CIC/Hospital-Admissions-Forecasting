@@ -8,7 +8,7 @@ export class VpcStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // ✅ Create VPC with Subnets
+    // Create VPC with Subnets
     this.vpc = new ec2.Vpc(this, "MyVPC", {
       ipAddresses: ec2.IpAddresses.cidr("10.0.0.0/16"),
       natGateways: 1,

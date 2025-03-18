@@ -23,7 +23,7 @@ import {
         description: "GitHub repository name for the Amplify app",
       }).valueAsString;
   
-      // 🔹 Define the Amplify YAML configuration with redirects
+      // Define the Amplify YAML configuration with redirects
       const amplifyYaml = yaml.parse(`
         version: 1
         applications:
@@ -71,7 +71,7 @@ import {
         }),
         environmentVariables: {
           VITE_AWS_REGION: this.region,
-          VITE_API_ENDPOINT: apiStack.apiUrl, // ✅ Inject API URL dynamically
+          VITE_API_ENDPOINT: apiStack.apiUrl, // Inject API URL dynamically
         },
         buildSpec: BuildSpec.fromObjectToYaml(amplifyYaml),
       });
