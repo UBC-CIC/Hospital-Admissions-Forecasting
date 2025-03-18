@@ -38,7 +38,7 @@ import {
                   commands:
                     - npm run build
               artifacts:
-                baseDirectory: dist
+                baseDirectory: build
                 files:
                   - '**/*'
               cache:
