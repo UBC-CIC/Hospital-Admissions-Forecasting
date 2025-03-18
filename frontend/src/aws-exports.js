@@ -1,6 +1,6 @@
 import { Amplify } from "aws-amplify";
 
-const apiEndpoint = process.envVITE_API_ENDPOINT?.replace(/\/$/, "");
+const apiEndpoint = process.env.VITE_API_ENDPOINT?.replace(/\/$/, "");
 
 const awsExports = {
   API: {
