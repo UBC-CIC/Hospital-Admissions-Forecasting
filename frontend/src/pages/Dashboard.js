@@ -103,7 +103,10 @@ import React, { useState, useEffect } from "react";
 import PatientTable from "../components/PatientTable";
 import AdmissionsChart from "../components/AdmissionsChart";
 import Clock from "../components/Clock";
-import { API } from "aws-amplify/api";
+// import { API } from "aws-amplify/api";
+import { API } from "@aws-amplify/api";
+import { Amplify } from "@aws-amplify/core";
+
 
 const Dashboard = () => {
   const [lastUpdatedTime, setLastUpdatedTime] = useState(new Date());
@@ -116,7 +119,8 @@ const Dashboard = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await API.get("MyApi", "/fetch");
+      // const response = await API.get("MyApi", "/fetch");
+      const response = await API.get("MyApi", { path: "/fetch" });
       const formattedPatients = response.map((patient) => ({
         id: patient.v_guid,
         facility: patient.facility_id,
