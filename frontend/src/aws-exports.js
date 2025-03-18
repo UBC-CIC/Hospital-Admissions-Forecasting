@@ -1,11 +1,13 @@
-import { Amplify } from "@aws-amplify/core";
+import { Amplify } from "aws-amplify";
 
-Amplify.configure({
+const awsExports = {
   API: {
     REST: {
       MyApi: {
-        endpoint: import.meta.env.VITE_API_ENDPOINT, // 🔥 Injected from Amplify CDK
+        endpoint: process.env.VITE_API_ENDPOINT, // 🔥 Injected from Amplify CDK
       },
     },
   },
-});
+};
+
+export default awsExports;

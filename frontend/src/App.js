@@ -46,12 +46,14 @@
 
 // export default App;
 import React from "react";
+import { Amplify } from "aws-amplify";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import PatientDetails from "./pages/PatientDetails";
 
 // Ensure AWS Amplify is configured first
-import "./aws-exports"; // ✅ This makes sure Amplify is set up before API calls
+Amplify.configure(awsExports);
+
 
 function App() {
   return (
