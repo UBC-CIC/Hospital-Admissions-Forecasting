@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { API } from "aws-amplify";
+import { get } from "@aws-amplify/api"
 import { useNavigate } from "react-router-dom";
 import RefreshButton from "./RefreshButton";
 
