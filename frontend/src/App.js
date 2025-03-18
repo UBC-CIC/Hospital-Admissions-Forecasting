@@ -48,6 +48,7 @@
 import React from "react";
 import { Amplify } from "aws-amplify";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import awsExports from './aws-exports';
 import Dashboard from "./pages/Dashboard";
 import PatientDetails from "./pages/PatientDetails";
 
