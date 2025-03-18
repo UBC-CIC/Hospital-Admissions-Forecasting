@@ -21,14 +21,17 @@
   },
   "dependencies": {
     "@aws-cdk/aws-amplify": "^1.203.0",
+    "@aws-cdk/aws-amplify-alpha": "^2.184.1-alpha.0",
     "@aws-cdk/aws-apigateway": "^1.203.0",
+    "@aws-cdk/aws-apigatewayv2-alpha": "^2.114.1-alpha.0",
     "@aws-cdk/aws-ec2": "^1.203.0",
     "@aws-cdk/aws-iam": "^1.203.0",
     "@aws-cdk/aws-lambda": "^1.203.0",
     "@aws-cdk/aws-s3": "^1.203.0",
     "@aws-cdk/aws-sagemaker": "^1.203.0",
-    "aws-cdk-lib": "2.164.1",
-    "constructs": "^10.0.0",
-    "source-map-support": "^0.5.21"
+    "aws-cdk-lib": "^2.184.1",
+    "constructs": "^10.4.2",
+    "source-map-support": "^0.5.21",
+    "yaml": "^2.7.0"
   }
 }

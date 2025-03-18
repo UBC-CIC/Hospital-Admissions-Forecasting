@@ -10,12 +10,16 @@ import { PatientDataStack } from "../lib/PatientData";
 import { LambdaStack } from "../lib/Lambda";
 import { DatabaseStack } from '../lib/DatabaseStack';
 import { InferenceLambdaStack } from '../lib/InferenceLambdaStack';
+import { AmplifyStack } from '../lib/AmplifyStack';
+
+
 
 
 
 import { Tags } from "aws-cdk-lib";
 
 const app = new cdk.App();
+
 
 // Define a common resource prefix
 let resourcePrefix = app.node.tryGetContext("prefix") || "haltonhealthcare";
@@ -55,9 +59,9 @@ new LambdaStack(app, `${resourcePrefix}-LambdaStack`, {
 //   env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
 // });
 
-new ApiStack(app, 'ApiStack', {
-  dbCluster: auroraStack.dbCluster, // Pass the entire Aurora cluster
-  dbSecret: auroraStack.secret,   // Pass the database secret
+const apiStack = new ApiStack(app, "ApiStack", {
+  dbCluster: auroraStack.dbCluster,
+  dbSecret: auroraStack.secret,
   vpc: auroraStack.vpc,
 });
 
@@ -73,7 +77,14 @@ new InferenceLambdaStack(app, 'InferenceLambdaStack', {
     vpc: auroraStack.vpc,
 });
 
-// // 🌟 Create Standalone Amplify Stack
+const amplifyStack = new AmplifyStack(app, "AmplifyStack", apiStack);
+
+
+// const amplifyStack = new AmplifyStack(app, `${resourcePrefix}-AmplifyStack`,apiStack, { env });
+
+
+
+// // 🌟 Create Standalone Amplify Stack  
 // new AmplifyStack(app, `${resourcePrefix}-AmplifyStack`, {
 //   env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
 // });
