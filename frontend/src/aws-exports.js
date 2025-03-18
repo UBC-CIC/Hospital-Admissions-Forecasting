@@ -5,7 +5,7 @@ const apiEndpoint = process.env.VITE_API_ENDPOINT?.replace(/\/$/, "");
 const awsExports = {
   API: {
     REST: {
-      MyApi: {
+      PredictionsAPI: {
         endpoint: apiEndpoint, // Injected from Amplify CDK
         region: process.env.VITE_AWS_REGION,
       },

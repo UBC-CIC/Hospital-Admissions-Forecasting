@@ -61,9 +61,12 @@ const PatientTable = () => {
   useEffect(() => {
     const fetchPatients = async () => {
       try {
+
+        console.log(" API Name Used:", "MyApi"); //  Log API name
+        console.log(" Fetching from:", import.meta.env.VITE_API_ENDPOINT, "/fetch");
         // Amplify v6 API call syntax
         const restOperation = get({ 
-          apiName: "MyApi", 
+          apiName: "PredictionsAPI", 
           path: "/fetch"
         });
         
@@ -91,7 +94,7 @@ const PatientTable = () => {
   const handleRefresh = async () => {
     try {
       const restOperation = get({
-        apiName: "MyApi",
+        apiName: "PredictionsAPI",
         path: "/fetch"
       });
       

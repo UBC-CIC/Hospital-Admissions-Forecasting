@@ -121,7 +121,7 @@ const Dashboard = () => {
     try {
       // const response = await API.get("MyApi", "/fetch");
       const response = await get({
-        apiName: "MyApi",
+        apiName: "PredictionsAPI",
         path: "/fetch"
       }).response;
 
