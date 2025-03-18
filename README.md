@@ -44,8 +44,8 @@ To deploy this solution, please follow the steps laid out in the [Deployment Gui
 
 Please refer to the [Interface Guide](./docs/interfaceGuide.md) for instructions on navigating the dashboard interface.
 
-![Dashboard Preview](https://placehold.co/600x400)
-*Dashboard Preview*
+<!-- ![Dashboard Preview](https://placehold.co/600x400) -->
+<!-- *Dashboard Preview* -->
 
 ## Directories
 
