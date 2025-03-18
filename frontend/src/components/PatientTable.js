@@ -63,7 +63,7 @@ const PatientTable = () => {
       try {
 
         console.log(" API Name Used:", "MyApi"); //  Log API name
-        console.log(" Fetching from:", import.meta.env.VITE_API_ENDPOINT, "/fetch");
+        console.log(" Fetching from:", process.env.VITE_API_ENDPOINT, "/fetch");
         // Amplify v6 API call syntax
         const restOperation = get({ 
           apiName: "PredictionsAPI", 
