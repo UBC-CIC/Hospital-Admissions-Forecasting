@@ -103,7 +103,7 @@ import React, { useState, useEffect } from "react";
 import PatientTable from "../components/PatientTable";
 import AdmissionsChart from "../components/AdmissionsChart";
 import Clock from "../components/Clock";
-import { API } from "aws-amplify";
+import { API } from "aws-amplify/api";
 
 const Dashboard = () => {
   const [lastUpdatedTime, setLastUpdatedTime] = useState(new Date());
