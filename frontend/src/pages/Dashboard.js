@@ -120,8 +120,14 @@ const Dashboard = () => {
     setError(null);
     try {
       // const response = await API.get("MyApi", "/fetch");
-      const response = await API.get("MyApi", "/fetch" );
-      const formattedPatients = response.map((patient) => ({
+      const response = await get({
+        apiName: "MyApi",
+        path: "/fetch"
+      }).response;
+
+      const data = await response.json();
+
+      const formattedPatients = data.map((patient) => ({
         id: patient.v_guid,
         facility: patient.facility_id,
         registrationTime: new Date(patient.registrationdatetime).toLocaleString(),

@@ -1,5 +1,54 @@
+// import React, { useState, useEffect } from "react";
+// import { get } from "@aws-amplify/api"
+// import { useNavigate } from "react-router-dom";
+// import RefreshButton from "./RefreshButton";
+
+// const PatientTable = () => {
+//   const navigate = useNavigate();
+//   const [patients, setPatients] = useState([]);
+//   const [filters, setFilters] = useState({ facility: "", urgency: "" });
+
+//   // Fetch patient data from API Gateway
+//   useEffect(() => {
+//     const fetchPatients = async () => {
+//       try {
+//         const response = await API.get("MyApi", "/fetch"); // Fetch from API Gateway
+//         // Transform API response to match expected format
+//         const formattedPatients = response.map((patient) => ({
+//           id: patient.v_guid,
+//           facility: patient.facility_id,
+//           registrationTime: new Date(patient.registrationdatetime).toLocaleString(),
+//           modelScore: patient.modelscore,
+//           lastUpdated: new Date(patient.lastupdated).toLocaleString(),
+//         }));
+//         setPatients(formattedPatients);
+//       } catch (error) {
+//         console.error("Error fetching patient data:", error);
+//       }
+//     };
+
+//     fetchPatients();
+//   }, []);
+
+//   // Refresh handler
+//   const handleRefresh = async () => {
+//     try {
+//       const response = await API.get("MyApi", "/fetch");
+//       const formattedPatients = response.map((patient) => ({
+//         id: patient.v_guid,
+//         facility: patient.facility_id,
+//         registrationTime: new Date(patient.registrationdatetime).toLocaleString(),
+//         modelScore: patient.modelscore,
+//         lastUpdated: new Date(patient.lastupdated).toLocaleString(),
+//       }));
+//       setPatients(formattedPatients);
+//     } catch (error) {
+//       console.error("Error refreshing patient data:", error);
+//     }
+//   };
+
 import React, { useState, useEffect } from "react";
-import { get } from "@aws-amplify/api"
+import { get } from "@aws-amplify/api"; // Updated v6 import
 import { useNavigate } from "react-router-dom";
 import RefreshButton from "./RefreshButton";
 
@@ -12,15 +61,23 @@ const PatientTable = () => {
   useEffect(() => {
     const fetchPatients = async () => {
       try {
-        const response = await API.get("MyApi", "/fetch"); // Fetch from API Gateway
-        // Transform API response to match expected format
-        const formattedPatients = response.map((patient) => ({
+        // Amplify v6 API call syntax
+        const restOperation = get({ 
+          apiName: "MyApi", 
+          path: "/fetch"
+        });
+        
+        const response = await restOperation.response;
+        const data = await response.json();
+        
+        const formattedPatients = data.map((patient) => ({
           id: patient.v_guid,
           facility: patient.facility_id,
           registrationTime: new Date(patient.registrationdatetime).toLocaleString(),
           modelScore: patient.modelscore,
           lastUpdated: new Date(patient.lastupdated).toLocaleString(),
         }));
+        
         setPatients(formattedPatients);
       } catch (error) {
         console.error("Error fetching patient data:", error);
@@ -33,14 +90,22 @@ const PatientTable = () => {
   // Refresh handler
   const handleRefresh = async () => {
     try {
-      const response = await API.get("MyApi", "/fetch");
-      const formattedPatients = response.map((patient) => ({
+      const restOperation = get({
+        apiName: "MyApi",
+        path: "/fetch"
+      });
+      
+      const response = await restOperation.response;
+      const data = await response.json();
+      
+      const formattedPatients = data.map((patient) => ({
         id: patient.v_guid,
         facility: patient.facility_id,
         registrationTime: new Date(patient.registrationdatetime).toLocaleString(),
         modelScore: patient.modelscore,
         lastUpdated: new Date(patient.lastupdated).toLocaleString(),
       }));
+      
       setPatients(formattedPatients);
     } catch (error) {
       console.error("Error refreshing patient data:", error);
