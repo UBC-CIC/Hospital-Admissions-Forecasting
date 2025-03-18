@@ -41,13 +41,13 @@ the Grid Search. The results of the respective models will be saved to
 the local results folder using the 'test_version' suffix to provid
 organization for naming different experiments.
 
-![](./myMediaFolder/media/image6.png){width="6.5in"
+![](./images/image6.png){width="6.5in"
 height="1.5138888888888888in"}
 
 Please ensure to restart and run all cells each time in the notebook to
 avoid any overlap of variables:
 
-![](./myMediaFolder/media/image1.png){width="2.266513560804899in"
+![](./images/image1.png){width="2.266513560804899in"
 height="2.049061679790026in"}
 
 Once models are trained and tested using cross-validation - results are
@@ -55,14 +55,14 @@ stored and can be viewed using the Visualize_Results.ipynb. The
 following are screenshots of the different capabilities of this
 notebook.
 
-![](./myMediaFolder/media/image2.png){width="3.207665135608049in"
-height="1.8697090988626421in"}![](./myMediaFolder/media/image3.png){width="3.0989588801399823in"
+![](./images/image2.png){width="3.207665135608049in"
+height="1.8697090988626421in"}![](./images/image3.png){width="3.0989588801399823in"
 height="1.7762325021872265in"}
 
 *Compare Model accuracy* *Look at AUC Scores*
 
-![](./myMediaFolder/media/image5.png){width="3.4270833333333335in"
-height="2.0358912948381453in"}![](./myMediaFolder/media/image4.png){width="2.9479166666666665in"
+![](./images/image5.png){width="3.4270833333333335in"
+height="2.0358912948381453in"}![](./images/image4.png){width="2.9479166666666665in"
 height="1.9617432195975504in"}
 
 *Plot confusion matrices Examine Feature Importance*
