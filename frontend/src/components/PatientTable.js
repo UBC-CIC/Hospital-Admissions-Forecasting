@@ -1,118 +1,47 @@
-// import React, { useState, useEffect } from "react";
-// import { get } from "@aws-amplify/api"
-// import { useNavigate } from "react-router-dom";
-// import RefreshButton from "./RefreshButton";
-
-// const PatientTable = () => {
-//   const navigate = useNavigate();
-//   const [patients, setPatients] = useState([]);
-//   const [filters, setFilters] = useState({ facility: "", urgency: "" });
-
-//   // Fetch patient data from API Gateway
-//   useEffect(() => {
-//     const fetchPatients = async () => {
-//       try {
-//         const response = await API.get("MyApi", "/fetch"); // Fetch from API Gateway
-//         // Transform API response to match expected format
-//         const formattedPatients = response.map((patient) => ({
-//           id: patient.v_guid,
-//           facility: patient.facility_id,
-//           registrationTime: new Date(patient.registrationdatetime).toLocaleString(),
-//           modelScore: patient.modelscore,
-//           lastUpdated: new Date(patient.lastupdated).toLocaleString(),
-//         }));
-//         setPatients(formattedPatients);
-//       } catch (error) {
-//         console.error("Error fetching patient data:", error);
-//       }
-//     };
-
-//     fetchPatients();
-//   }, []);
-
-//   // Refresh handler
-//   const handleRefresh = async () => {
-//     try {
-//       const response = await API.get("MyApi", "/fetch");
-//       const formattedPatients = response.map((patient) => ({
-//         id: patient.v_guid,
-//         facility: patient.facility_id,
-//         registrationTime: new Date(patient.registrationdatetime).toLocaleString(),
-//         modelScore: patient.modelscore,
-//         lastUpdated: new Date(patient.lastupdated).toLocaleString(),
-//       }));
-//       setPatients(formattedPatients);
-//     } catch (error) {
-//       console.error("Error refreshing patient data:", error);
-//     }
-//   };
 
 import React, { useState, useEffect } from "react";
-import { get } from "@aws-amplify/api"; // Updated v6 import
 import { useNavigate } from "react-router-dom";
 import RefreshButton from "./RefreshButton";
+import { get } from 'aws-amplify/api'
+
+const API_URL = "https://h0q30c9rah.execute-api.ca-central-1.amazonaws.com/prod/fetch"; // Replace with actual API endpoint
 
 const PatientTable = () => {
   const navigate = useNavigate();
   const [patients, setPatients] = useState([]);
   const [filters, setFilters] = useState({ facility: "", urgency: "" });
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
-  // Fetch patient data from API Gateway
+  // Fetch patient data from API
+
+  // console.log(" Fetching from:", process.env.VITE_API_ENDPOINT, "/fetch");
+        
+  // const restOperation = get({ 
+  //   apiName: "PredictionsAPI", 
+  //   path: "/fetch"
+  // });
+  const fetchPatients = async () => {
+    try {
+      const restOperation = get({
+        apiName: 'PredictionsAPI',
+        path: '/fetch'
+      });
+      const response = await restOperation.response;
+      const data = await response.json();
+      setPatients(data);
+    } catch (error) {
+      console.error("Error fetching patient data:", error);
+    }
+  };
+
+  // Fetch data when component mounts
   useEffect(() => {
-    const fetchPatients = async () => {
-      try {
-
-        console.log(" API Name Used:", "MyApi"); //  Log API name
-        console.log(" Fetching from:", process.env.VITE_API_ENDPOINT, "/fetch");
-        // Amplify v6 API call syntax
-        const restOperation = get({ 
-          apiName: "PredictionsAPI", 
-          path: "/fetch"
-        });
-        
-        const response = await restOperation.response;
-        const data = await response.json();
-        
-        const formattedPatients = data.map((patient) => ({
-          id: patient.v_guid,
-          facility: patient.facility_id,
-          registrationTime: new Date(patient.registrationdatetime).toLocaleString(),
-          modelScore: patient.modelscore,
-          lastUpdated: new Date(patient.lastupdated).toLocaleString(),
-        }));
-        
-        setPatients(formattedPatients);
-      } catch (error) {
-        console.error("Error fetching patient data:", error);
-      }
-    };
-
     fetchPatients();
   }, []);
 
-  // Refresh handler
-  const handleRefresh = async () => {
-    try {
-      const restOperation = get({
-        apiName: "PredictionsAPI",
-        path: "/fetch"
-      });
-      
-      const response = await restOperation.response;
-      const data = await response.json();
-      
-      const formattedPatients = data.map((patient) => ({
-        id: patient.v_guid,
-        facility: patient.facility_id,
-        registrationTime: new Date(patient.registrationdatetime).toLocaleString(),
-        modelScore: patient.modelscore,
-        lastUpdated: new Date(patient.lastupdated).toLocaleString(),
-      }));
-      
-      setPatients(formattedPatients);
-    } catch (error) {
-      console.error("Error refreshing patient data:", error);
-    }
+  // Refresh handler (fetches fresh data without reloading)
+  const handleRefresh = () => {
+    fetchPatients();
   };
 
   // Filter handler
@@ -121,21 +50,42 @@ const PatientTable = () => {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Navigate to patient details page
-  const handlePatientClick = (id) => {
-    navigate(`/patient/${id}`);
+  // Sort handler
+  const handleSort = (key) => {
+    setSortConfig((prev) => ({
+      key,
+      direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc",
+    }));
   };
 
-  // Filtered data
-  const filteredPatients = patients.filter((patient) => {
-    const matchesFacility = filters.facility ? patient.facility === filters.facility : true;
+  // Sort patients
+  const sortedPatients = [...patients].sort((a, b) => {
+    if (!sortConfig.key) return 0;
+
+    let aValue = a[sortConfig.key];
+    let bValue = b[sortConfig.key];
+
+    // Convert dates to timestamps for proper sorting
+    if (sortConfig.key === "registrationdatetime") {
+      aValue = new Date(aValue).getTime();
+      bValue = new Date(bValue).getTime();
+    }
+
+    if (aValue < bValue) return sortConfig.direction === "asc" ? -1 : 1;
+    if (aValue > bValue) return sortConfig.direction === "asc" ? 1 : -1;
+    return 0;
+  });
+
+  // Apply filters
+  const filteredPatients = sortedPatients.filter((patient) => {
+    const matchesFacility = filters.facility ? patient.facility_id === filters.facility : true;
     const matchesUrgency =
       filters.urgency === "high"
-        ? patient.modelScore >= 0.8
+        ? patient.modelscore >= 0.8
         : filters.urgency === "medium"
-        ? patient.modelScore >= 0.3 && patient.modelScore < 0.8
+        ? patient.modelscore >= 0.3 && patient.modelscore < 0.8
         : filters.urgency === "low"
-        ? patient.modelScore < 0.3
+        ? patient.modelscore < 0.3
         : true;
 
     return matchesFacility && matchesUrgency;
@@ -143,33 +93,31 @@ const PatientTable = () => {
 
   return (
     <div>
-      {/* Header */}
+      {/* Filters & Refresh Button */}
       <div style={styles.header}>
-        <div style={styles.headerIcons}>
-          <div style={styles.filterContainer}>
-            <label>
-              Filter by Facility:
-              <select name="facility" onChange={handleFilterChange} value={filters.facility} style={styles.select}>
-                <option value="">All</option>
-                <option value="OTMH">OTMH</option>
-                <option value="MDH">MDH</option>
-                <option value="GDH">GDH</option>
-              </select>
-            </label>
+        <div style={styles.filterContainer}>
+          <label>
+            Filter by Facility:
+            <select name="facility" onChange={handleFilterChange} value={filters.facility} style={styles.select}>
+              <option value="">All</option>
+              <option value="OTMH">OTMH</option>
+              <option value="MDH">MDH</option>
+              <option value="GDH">GDH</option>
+            </select>
+          </label>
 
-            <label style={{ marginLeft: "15px" }}>
-              Filter by Urgency:
-              <select name="urgency" onChange={handleFilterChange} value={filters.urgency} style={styles.select}>
-                <option value="">All</option>
-                <option value="high">High (≥0.8)</option>
-                <option value="medium">Medium (0.3 - &lt;0.8)</option>
-                <option value="low">Low (&lt;0.3)</option>
-              </select>
-            </label>
-          </div>
-          <div style={styles.refreshButtonContainer}>
-            <RefreshButton onClick={handleRefresh} />
-          </div>
+          <label style={{ marginLeft: "15px" }}>
+            Filter by Urgency:
+            <select name="urgency" onChange={handleFilterChange} value={filters.urgency} style={styles.select}>
+              <option value="">All</option>
+              <option value="high">High (≥0.8)</option>
+              <option value="medium">Medium (0.3 - &lt;0.8)</option>
+              <option value="low">Low (&lt;0.3)</option>
+            </select>
+          </label>
+        </div>
+        <div style={styles.refreshButtonContainer}>
+          <RefreshButton onClick={handleRefresh} />
         </div>
       </div>
 
@@ -179,24 +127,35 @@ const PatientTable = () => {
           <tr>
             <th>V_GUID</th>
             <th>Facility ID</th>
-            <th>Registration Time</th>
-            <th>Model Score</th>
-            <th>Last Updated</th>
+            <th>
+              Registration Time{" "}
+              <button style={styles.sortButton} onClick={() => handleSort("registrationdatetime")}>
+                {sortConfig.key === "registrationdatetime" && sortConfig.direction === "asc" ? "⬆️" : "⬇️"}
+              </button>
+            </th>
+            <th>
+              Model Score{" "}
+              <button style={styles.sortButton} onClick={() => handleSort("modelscore")}>
+                {sortConfig.key === "modelscore" && sortConfig.direction === "asc" ? "⬆️" : "⬇️"}
+              </button>
+            </th>
+            <th>Last Updated</th> {/* API-driven column */}
           </tr>
         </thead>
         <tbody>
           {filteredPatients.map((patient) => (
-            <tr key={patient.id} style={{ backgroundColor: getUrgencyColor(patient.modelScore) }}>
+            <tr key={patient.v_guid} style={{ backgroundColor: getUrgencyColor(patient.modelscore) }}>
+              {/* Clickable Patient ID */}
               <td
                 style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}
-                onClick={() => handlePatientClick(patient.id)}
+                onClick={() => navigate(`/patient/${patient.v_guid}`)}
               >
-                {patient.id}
+                {patient.v_guid}
               </td>
-              <td>{patient.facility}</td>
-              <td>{patient.registrationTime}</td>
-              <td>{patient.modelScore.toFixed(2)}</td>
-              <td>{patient.lastUpdated}</td>
+              <td>{patient.facility_id}</td>
+              <td>{patient.registrationdatetime}</td>
+              <td>{patient.modelscore.toFixed(2)}</td>
+              <td>{new Date(patient.lastupdated).toLocaleString()}</td> {/* Only API data */}
             </tr>
           ))}
         </tbody>
@@ -205,14 +164,12 @@ const PatientTable = () => {
   );
 };
 
-// Function to assign color based on urgency
 const getUrgencyColor = (score) => {
   if (score >= 0.8) return "#FFCCCC"; // High urgency - Red
   if (score >= 0.3) return "#FFFFCC"; // Medium urgency - Yellow
   return "#CCFFCC"; // Low urgency - Green
 };
 
-// Styles
 const styles = {
   header: {
     display: "flex",
@@ -222,10 +179,6 @@ const styles = {
     color: "#fff",
     padding: "10px",
     marginBottom: "10px",
-  },
-  headerIcons: {
-    display: "flex",
-    alignItems: "center",
   },
   filterContainer: {
     display: "flex",
@@ -245,9 +198,17 @@ const styles = {
     padding: "5px",
     marginLeft: "10px",
   },
+  sortButton: {
+    background: "none",
+    border: "none",
+    cursor: "pointer",
+    fontSize: "16px",
+    marginLeft: "5px",
+  },
 };
 
 export default PatientTable;
+
 
 
 
