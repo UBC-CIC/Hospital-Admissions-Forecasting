@@ -1,13 +1,13 @@
 import { Amplify } from "aws-amplify";
 
-const apiEndpoint = process.env.VITE_API_ENDPOINT?.replace(/\/$/, "");
+const apiEndpoint = process.env.REACT_APP_API_ENDPOINT?.replace(/\/$/, "");
 
 const awsExports = {
   API: {
     REST: {
       PredictionsAPI: {
         endpoint: apiEndpoint, // Injected from Amplify CDK
-        region: process.env.VITE_AWS_REGION,
+        region: process.env.REACT_APP_AWS_REGION	,
       },
     },
   },
