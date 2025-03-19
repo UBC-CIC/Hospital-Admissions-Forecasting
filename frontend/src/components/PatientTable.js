@@ -16,17 +16,25 @@ const PatientTable = () => {
 
   // console.log(" Fetching from:", process.env.VITE_API_ENDPOINT, "/fetch");
         
-  // const restOperation = get({ 
-  //   apiName: "PredictionsAPI", 
-  //   path: "/fetch"
-  // });
+ 
+  // const fetchPatients = async () => {
+  //   try {
+  //     const restOperation = get({
+  //       apiName: 'PredictionsAPI',
+  //       path: '/fetch'
+  //     });
+  //     const response = await restOperation.response;
+  //     const data = await response.json();
+  //     setPatients(data);
+  //   } catch (error) {
+  //     console.error("Error fetching patient data:", error);
+  //   }
+  // };
+
   const fetchPatients = async () => {
     try {
-      const restOperation = get({
-        apiName: 'PredictionsAPI',
-        path: '/fetch'
-      });
-      const response = await restOperation.response;
+      console.log(process.env.VITE_API_ENDPOINT)
+      const response = await fetch(process.env.VITE_API_ENDPOINT, {method: "GET"},);
       const data = await response.json();
       setPatients(data);
     } catch (error) {
