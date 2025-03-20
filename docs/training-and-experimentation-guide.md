@@ -32,7 +32,7 @@ The Sagemaker Jupyter Notebook contains the following files and folders:
 |    |---- config.py
 |    |---- rf_script.py
 |    |---- xgb_script.py
-|---- requirements.txt
+|    |---- requirements.txt
 ```
 
 ## Usage Overview
