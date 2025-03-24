@@ -88,6 +88,8 @@ def lambda_handler(event, context):
             "headers": {
                 "Content-Type": "application/json",
                 "Access-Control-Allow-Origin": "*",  # Enable CORS for frontend
+                "Access-Control-Allow-Methods": "OPTIONS, GET, POST",  # Explicitly allow methods
+                "Access-Control-Allow-Headers": "Content-Type, Authorization"  # Allow frontend headers
             },
             "body": json.dumps(entries, default=str)
         }
