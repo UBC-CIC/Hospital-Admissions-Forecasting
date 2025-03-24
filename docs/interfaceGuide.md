@@ -12,7 +12,7 @@ page:
 
 Upon clicking the refresh button, the model score updates in real-time.
 
-The Current Patients table displays a list of patients, each identified by their unique V_GUID, Facility ID, Registration Time, and Model Score. Users can filter the table by Facility and Urgency to refine the displayed results. Users can also sort by `Registration Time` and `Model Score`.
+The Current Patients table displays a list of patients, each identified by their unique `V_GUID`, `Facility ID`, `Registration Time`, and `Model Score`. Users can filter the table by Facility and Urgency to refine the displayed results. Users can also sort by `Registration Time` and `Model Score`.
 ![image](https://github.com/user-attachments/assets/d547966c-b054-453b-a630-c1e108cede4b)
 
 
