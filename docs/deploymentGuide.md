@@ -11,10 +11,10 @@
    - [Step 1: Fork \& Clone The Repository](#step-1-fork--clone-the-repository)
      - [Install Dependencies](#install-dependencies)
    - [Step 2: Upload Secrets](#step-2-upload-secrets)
-   - [Step 3: CDK Deployment](#step-3-backend-deployment)
+   - [Step 3: CDK Deployment](#step-3-cdk-deployment)
      - [1: Navigate to the cdk directory](#1-navigate-to-the-cdk-directory)
      - [3b: CDK Deployment](#3b-cdk-deployment)
-  - [Step 4: Deploying the Sagemaker Inference Endpoint]
+  - [Step 4: Deploying the Sagemaker Inference Endpoint](#step-4-Deploying-the-Sagemaker-Inference-Endpoint)
 - [Post-Deployment](#post-deployment)
    - [Step 1: Build AWS Amplify App](#step-1-build-aws-amplify-app)
    - [Step 2: Add Redirect](#step-2-add-redirect)
@@ -52,7 +52,8 @@ To deploy this solution, you will need to generate a GitHub personal access toke
 ### Step 1: Fork & Clone The Repository
 First, you need to fork the repository. To create a fork, navigate to the main branch of this repository. Then, in the top-right corner, click Fork.
 
-![](./images/fork.jpeg)
+![fork-repo](https://github.com/user-attachments/assets/602d9890-d85a-4dcb-9e20-fc0d33afd2e6)
+
 
 You will be directed to the page where you can customize owner, repository name, etc, but you do not have to change any option. Simply click Create fork in the bottom right corner.
 
@@ -220,43 +221,25 @@ If you have trouble running the commands, try removing all the \ and run it in o
 
 
 ## Post-Deployment
-
 ### Step 1: Build AWS Amplify App
 
-Log in to AWS console, and navigate to **AWS Amplify**. You can do so by typing `Amplify` in the search bar at the top.
+1. Log in to AWS console, and navigate to **AWS Amplify**. You can do so by typing `Amplify` in the search bar at the top.
+2. From `All apps`, click `halton-amplify`.
+3. Then click `main` under `branches`
+4. Click `run job` and wait for the build to complete.
+5. You now have access to the `Amplify App ID` and the public domain name to use the web app.
 
-From `All apps`, click `faculty-cv-amplify`. The first time you enter this console, you will need to follow a series of straightforward instructions to configure your GitHub app and give permission to Amplify to modify your repo.
-![AWS Amplify Console](images/amplify_github.png)
+### Step 2: Change Redirects
 
-After this go back to `All apps`, click `faculty-cv-amplify` to go to the app settings. Note down the App ID.\
-![image](images/amplify-app.png)
+1. Click back to navigate to `aila-amplify/Overview`
+2. In the left side bar click   `Rewrites and Redirects` under `Hosting`
+3. Click `manage redirects` on the top right
+4. Click `add rewrite`
+5. For `Source address` type `</^[^.]+$|.(?!(css|gif|ico|jpg|js|png|txt|svg|woff|woff2|ttf|map|json|webp)$)([^.]+$)/>`
+6. For `Target address` type `/`
+7. For `Type` select `404 (Redirect)`
+8. Click `Save`
 
-
-You may run the following command to build the app. Please replace `<APP-ID>` with the app ID found in amplify and `<PROFILE-NAME>` with the appropriate AWS profile used earlier. 
-```
-aws amplify start-job --job-type RELEASE --app-id <APP-ID> --branch-name main --profile <PROFILE-NAME>
-```
-This will trigger the build. 
-When the build is completed, you will see the screen as shown in the below image.
-Please note down the URL highlighted in red, as this will be the URL of the web application.
-![image](images/amplify-link.png)
-
-### Step 2: Add Redirect
-
-Click on `Hosting` in the left taskbar and click on `Rewrites and redirects`.
-
-![image](images/amplify-hosting.png)
-
-Here click on `Manage redirects` and then `Add Rewrite` to add a redirect with: 
-- Source Address:
-`</^[^.]+$|\.(?!(css|gif|ico|jpg|js|png|txt|svg|woff|woff2|ttf|map|json|webp)$)([^.]+$)/>`
-- Target Address: `/`
-- Type: `404 (Redirect)`
-
-![image](images/amplify-redirect.png)
-
-And then click `Save`.
-Refer to [AWS's Page on Single Page Apps](https://docs.aws.amazon.com/amplify/latest/userguide/redirects.html#redirects-for-single-page-web-apps-spa) for further information on why we did that.
 
 ### Step 3: Visit Web App
 Now you can navigate to the URL you created in step 1 to see your application in action.
