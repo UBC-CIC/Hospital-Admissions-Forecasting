@@ -11,21 +11,14 @@
    - [Step 1: Fork \& Clone The Repository](#step-1-fork--clone-the-repository)
      - [Install Dependencies](#install-dependencies)
    - [Step 2: Upload Secrets](#step-2-upload-secrets)
-   - [Step 3: Backend Deployment](#step-3-backend-deployment)
+   - [Step 3: CDK Deployment](#step-3-backend-deployment)
      - [1: Navigate to the cdk directory](#1-navigate-to-the-cdk-directory)
-     - [2: Upload the Elsevier API Key, Institution Token, Database Secret and OPS API Key](#2-upload-the-elsevier-api-key-institution-token-database-secret-and-ops-api-key)
-     - [3a: CDK Deployment in Hybrid Cloud Environment](#3a-cdk-deployment-in-hybrid-cloud-environment)
      - [3b: CDK Deployment](#3b-cdk-deployment)
-   - [Taking down the deployed stacks](#taking-down-the-deployed-stacks)
-   - [Step 4: Upload Data to S3 for the Bulk Data Pipeline](#step-4-upload-data-to-s3-for-the-bulk-data-pipeline)
-   - [Step 5: Upload Data to S3 for the Grant Data Pipeline](#step-5-upload-data-to-s3-for-the-grant-data-pipeline)
-   - [Step 6: Starting Patent Data Pipeline](#step-6-starting-patent-data-pipeline)
+  - [Step 4: Deploying the Sagemaker Inference Endpoint]
 - [Post-Deployment](#post-deployment)
    - [Step 1: Build AWS Amplify App](#step-1-build-aws-amplify-app)
    - [Step 2: Add Redirect](#step-2-add-redirect)
    - [Step 3: Visit Web App](#step-3-visit-web-app)
-- [Creating a User](#creating-a-user)
-- [Activating User Self Sign up](#activating-user-self-sign-up)
 
 ## Requirements
 
@@ -59,7 +52,7 @@ To deploy this solution, you will need to generate a GitHub personal access toke
 ### Step 1: Fork & Clone The Repository
 First, you need to fork the repository. To create a fork, navigate to the main branch of this repository. Then, in the top-right corner, click Fork.
 
-
+![](./images/fork.jpeg)
 
 You will be directed to the page where you can customize owner, repository name, etc, but you do not have to change any option. Simply click Create fork in the bottom right corner.
 
@@ -68,16 +61,13 @@ Now let's clone the GitHub repository onto your machine. To do this:
 2. For an Apple computer, open Terminal. If on a Windows machine, open Command Prompt or Windows Terminal. Enter into the folder you made using the command cd path/to/folder. To find the path to a folder on a Mac, right click on the folder and press Get Info, then select the whole text found under Where: and copy with ⌘C. On Windows (not WSL), enter into the folder on File Explorer and click on the path box (located to the left of the search bar), then copy the whole text that shows up.
 3. Clone the GitHub repository by entering the following command. Be sure to replace `<YOUR-GITHUB-USERNAME>` with your own username.
 ```
-git clone <https://github.com/><YOUR-GITHUB-USERNAME>/AI-Learning-Assistant.git
+git clone <https://github.com/><YOUR-GITHUB-USERNAME>/Hospital-Admissions-Forecasting.git
 ```
 The code should now be in the folder you created. Navigate into the root folder containing the entire codebase by running the command:
 ```
-cd AI-Learning-Assistant
+cd Hospital-Admissions-Forecasting
 ```
 You would have to supply your GitHub personal access token you created earlier when deploying the solution. Run the following command and ensure you replace `<YOUR-GITHUB-TOKEN>` and `<YOUR-PROFILE-NAME>` with your actual GitHub token and the appropriate AWS profile name. Select the command corresponding to your operating system from the options below.
-
-<details>
-<summary>macOS</summary>
 
 
 #### Install Dependencies
@@ -212,83 +202,22 @@ cdk deploy --all \
 
 For example:
 ```
-cdk deploy --all --parameters AILA-AmplifyStack:githubRepoName=AI-Learning-Assistant --context StackPrefix=AILA --profile <your-profile-name>
+cdk deploy --all --parameters halton-AmplifyStack:githubRepoName=Hospital-Admissions-Forecasting --context StackPrefix=halton --profile <your-profile-name>
 ```
 
 If you have trouble running the commands, try removing all the \ and run it in one line.
 
+### Step 4: Deploying the Sagemaker Inference Endpoint
+1. Make sure you have the trained model artifact file (should be named `model.tar.gz`) with the inference script and requirements file.
+2. At the [AWS online console](https://console.aws.amazon.com/console/home), enter `S3` in the search bar.
+3. In the `Buckets` search bar enter `sagemaker` and click on the name of the bucket (the actual name will vary a bit but should have `model bucket` in its name). This is where you will upload the trained model artifact.
+   ![image](https://github.com/user-attachments/assets/86b7459a-1f7c-4ce1-955c-3db4aa2c7763)
+4. In this bucket click `Upload`. Then, click `Add Files`. Add the trained model artifact file `model.tar.gz` and click `Upload` to complete the process.
+   ![image](https://github.com/user-attachments/assets/5336f1ee-da50-433d-8894-8282df2fd667)
+6. Once the upload is complete, click `Close`.
+7. At the [AWS online console](https://console.aws.amazon.com/console/home), enter `Amazon SageMaker AI`. Navigate to `Inference`, then `Endpoints`. Make sure the `medical-inference-endpoint` is `InService`.
+   ![image](https://github.com/user-attachments/assets/e74b2a63-995d-4538-8451-b9a4082091c2)
 
-#### 1: Navigate to the cdk directory
-Navigate to the cdk directory in the repository using the following command.
-
-```
-cd cdk
-```
-
-#### 3a: CDK Deployment in Hybrid Cloud Environment
-
-The following set of instructions are only if you want to deploy this application in a **hybrid cloud environment**. If you do not want to do this you can skip to [3b: CDK Deployment](#3b-cdk-deployment).
-
-In order to deploy in a hybrid cloud environment, you will need to have access to the **aws-controltower-VPC** and the name of your **AWSControlTowerStackSet**.
-
-#### Step-by-Step Instructions
-
-1. **Modify the VPC Stack:**
-   - Navigate to the `vpc-stack.ts` file located at `cdk/lib/vpc-stack.ts`.
-   - Replace **line 13** with your existing VPC ID:
-     ```typescript
-     const existingVpcId: string = 'your-vpc-id'; //CHANGE IF DEPLOYING WITH EXISTING VPC
-     ```
-     You can find your VPC ID by navigating to the **VPC dashboard** in the AWS Management Console and locating the VPC in the `Your VPCs` section.
-
-     ![VPC ID Image](images/ExistingVPCId.png)
-
-2. **Update the AWS Control Tower Stack Set:**
-   - Replace **line 21** with your AWS Control Tower Stack Set name:
-     ```typescript
-     const AWSControlTowerStackSet = "your-stackset-name"; //CHANGE TO YOUR CONTROL TOWER STACK SET
-     ```
-     You can find this name by navigating to the **CloudFormation dashboard** in AWS, under `Stacks`. Look for a stack name that starts with `StackSet-AWSControlTowerBP-VPC-ACCOUNT-FACTORY`.
-
-     ![AWS Control Tower Stack Image](images/AWSControlTowerStack.png)
-
-
-You can proceed with the rest of the deployment instructions and the Vpc Stack will automatically use your existing VPC instead of creating a new one. For more detailed information about the hybrid cloud deployment you checkout the [Hybrid Cloud Deployment Guide](/docs/HybridCloudDeploymentGuide.md)
-
-#### 3b: CDK Deployment
-
-Initialize the CDK stacks, replacing `<YOUR_AWS_ACCOUNT_ID>`, `<YOUR_ACCOUNT_REGION>` and `<YOUR-PROFILE-NAME>`. with the appropriate values. **NOTE: Remember to have your Docker container running.**
-
-```bash
-cdk bootstrap aws://<YOUR_AWS_ACCOUNT_ID>/<YOUR_ACCOUNT_REGION> --profile <YOUR-PROFILE-NAME>
-cdk synth --profile <YOUR-PROFILE-NAME>
-```
-
-Deploy the CDK stacks:
-
-**Note for deploying the PatentDataStack**: You must make a note of what the name of your institution appear on [Espacenet](https://worldwide.espacenet.com/patent/) or by working with a representative from the European Patent Office. We highly recommend working with a patent specialist to determine the exact name that represents your institution on Espacenet/EPO.
-
-For example, it was determined that the EPO/Espacenet use "UNIV BRITISH COLUMBIA" to represent UNIVERSITY OF BRITISH COLUMBIA. ![alt text](images/espacenet-applicant-name.png)
-
-Thus you should do the following if you would like to deploy only the Patent Data Stack:
-
-```
-cdk deploy PatentDataStack --parameters PatentDataStack:epoInstitutionName="UNIV BRITISH COLUMBIA,UNIVERSITY OF BRITISH COLUMBIA" --profile <YOUR-PROFILE-NAME>
-```
-
-Note that the two name `"UNIV BRITISH COLUMBIA,UNIVERSITY OF BRITISH COLUMBIA"`  is separated by a comma, and there is **no space before or after the comma**.
-
-
-You may run the following command to deploy the stacks all at once. Again, replace `<YOUR-INSTITUTION-NAME>` with the name that represents your instiution on Espacenet/EPO and`<YOUR-PROFILE-NAME>` with the appropriate AWS profile used earlier.
-
-```
-cdk deploy --all --parameters PatentDataStack:epoInstitutionName="<YOUR-INSTITUTION-NAME>" --profile <YOUR-PROFILE-NAME>
-```
-
-* Example:
-   ```
-   cdk deploy --all --parameters PatentDataStack:epoInstitutionName="UNIV BRITISH COLUMBIA,UNIVERSITY OF BRITISH COLUMBIA" --profile <YOUR-PROFILE-NAME>
-   ```
 
 ## Post-Deployment
 
@@ -331,4 +260,6 @@ Refer to [AWS's Page on Single Page Apps](https://docs.aws.amazon.com/amplify/la
 
 ### Step 3: Visit Web App
 Now you can navigate to the URL you created in step 1 to see your application in action.
+
+
 
