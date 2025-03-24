@@ -231,7 +231,7 @@ If you have trouble running the commands, try removing all the \ and run it in o
 
 ### Step 2: Change Redirects
 
-1. Click back to navigate to `aila-amplify/Overview`
+1. Click back to navigate to `halton-amplify/Overview`
 2. In the left side bar click   `Rewrites and Redirects` under `Hosting`
 3. Click `manage redirects` on the top right
 4. Click `add rewrite`
