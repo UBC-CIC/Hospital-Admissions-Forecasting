@@ -70,8 +70,8 @@ import {
           ),
         }),
         environmentVariables: {
-          VITE_AWS_REGION: this.region,
-          VITE_API_ENDPOINT: apiStack.apiUrl, // Inject API URL dynamically
+          REACT_APP_AWS_REGION: this.region,
+          REACT_APP_API_ENDPOINT: apiStack.apiUrl, // Inject API URL dynamically
         },
         buildSpec: BuildSpec.fromObjectToYaml(amplifyYaml),
       });

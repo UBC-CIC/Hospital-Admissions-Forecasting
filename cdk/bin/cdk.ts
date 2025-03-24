@@ -5,7 +5,6 @@ import * as cdk from "aws-cdk-lib";
 import { VpcStack } from "../lib/VpcStack";
 import { ApiStack } from "../lib/ApiStack";
 import { SageMakerEndpointStack } from "../lib/SageMakerEndpoint";
-import { LambdaStack } from "../lib/Lambda";
 import { DatabaseStack } from '../lib/DatabaseStack';
 import { InferenceLambdaStack } from '../lib/InferenceLambdaStack';
 import { AmplifyStack } from '../lib/AmplifyStack';
@@ -30,10 +29,10 @@ const sageMakerEndpointStack = new SageMakerEndpointStack(app, `${resourcePrefix
   env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
 });
 
-//  Create Standalone SageMaker Stack
-new LambdaStack(app, `${resourcePrefix}-LambdaStack`, {
-  env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
-});
+// //  Create Standalone SageMaker Stack
+// new LambdaStack(app, `${resourcePrefix}-LambdaStack`, {
+//   env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
+// });
 
 const apiStack = new ApiStack(app, "ApiStack", {
   dbCluster: auroraStack.dbCluster,
