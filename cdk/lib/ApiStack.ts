@@ -40,10 +40,6 @@ export class ApiStack extends cdk.Stack {
       handler: 'fetchEntries.lambda_handler',
       code: lambda.Code.fromAsset('lambda/fetchEntries'), // Lambda function folder
       layers: [psycopg2Layer],
-      // environment: {
-      //   DB_SECRET_ARN: "your-db-secret-arn",
-      //   DB_NAME: "PredictionsDB",
-      // },
       environment: {
         DB_HOST: props.dbCluster.clusterEndpoint.hostname,
         DB_PORT: props.dbCluster.clusterEndpoint.port.toString(),

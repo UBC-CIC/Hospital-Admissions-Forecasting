@@ -4,32 +4,12 @@ import { useNavigate } from "react-router-dom";
 import RefreshButton from "./RefreshButton";
 import { get } from 'aws-amplify/api'
 
-const API_URL = "https://h0q30c9rah.execute-api.ca-central-1.amazonaws.com/prod/fetch"; // Replace with actual API endpoint
-
 const PatientTable = () => {
   const navigate = useNavigate();
   const [patients, setPatients] = useState([]);
   const [filters, setFilters] = useState({ facility: "", urgency: "" });
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
-  // Fetch patient data from API
-
-  // console.log(" Fetching from:", process.env.VITE_API_ENDPOINT, "/fetch");
-        
- 
-  // const fetchPatients = async () => {
-  //   try {
-  //     const restOperation = get({
-  //       apiName: 'PredictionsAPI',
-  //       path: '/fetch'
-  //     });
-  //     const response = await restOperation.response;
-  //     const data = await response.json();
-  //     setPatients(data);
-  //   } catch (error) {
-  //     console.error("Error fetching patient data:", error);
-  //   }
-  // };
 
   const fetchPatients = async () => {
     try {
