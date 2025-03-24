@@ -40,7 +40,7 @@ def _parse_args():
     parser.add_argument("--train", type=str, default=os.environ.get("SM_CHANNEL_TRAINING"))
     parser.add_argument("--hosts", type=list, default=json.loads(os.environ.get("SM_HOSTS")))
     parser.add_argument("--current-host", type=str, default=os.environ.get("SM_CURRENT_HOST"))
-    parser.add_argument("--file_name", type=str, default="ED_UBC_20240924_ImagingAdded.csv")
+    parser.add_argument("--file_name", type=str, default="ED_UBC_20240924_ImagingAdded.csv")#change the file name accordingly
     #passed manually, you can add whatever custom arguments you want and pass them through the Jupyter notebook.,
     parser.add_argument('--test_version',type=str)
     return parser.parse_known_args()

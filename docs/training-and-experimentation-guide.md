@@ -63,7 +63,9 @@ Once models are trained and tested using cross-validation, results are stored an
 
 ### Launching a Training Job with a Finalized Model
 
-Once you have decided which model to select, you can edit the `config.py` file to select the final model and the final list of parameters for the model.
+Once you have decided which model to select, you can edit the `config.py` file to select the final model and the final list of parameters for the model. Review the training .csv file name in the script you are using (rf_script.py or xgb_script.py) and change the name accordingly in the _parse_args function. See example below:  
+
+parser.add_argument("--file_name", type=str, default="ED_UBC_20240924_ImagingAdded.csv")
 
 Once this is configured, you may run the `launch_training_job.ipynb` notebook to launch the training job and save the model artifact to a specified S3 directory so it can be deployed as an endpoint for inference.
 
