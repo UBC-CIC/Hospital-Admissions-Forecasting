@@ -16,7 +16,8 @@
 
 ## Overview
 
-This guide provides a description of training a model using triage data, viewing results, and choosing an appropriate model to deploy for the Sagemaker endpoint. These Jupyter files can be run on an `ml.t2.medium` Sagemaker notebook.
+This guide provides a description of training a model using triage data, viewing results, and choosing an appropriate model to deploy for the Sagemaker endpoint. These Jupyter files can be run on an `ml.t2.medium` Sagemaker notebook. Please find the data fields [here](./datafields.md).
+
 
 ## Directory Structure
 
