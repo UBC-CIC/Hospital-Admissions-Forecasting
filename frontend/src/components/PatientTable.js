@@ -14,7 +14,7 @@ const PatientTable = () => {
   const fetchPatients = async () => {
     try {
       console.log(process.env.REACT_APP_API_ENDPOINT)
-      const response = await fetch(process.env.REACT_APP_API_ENDPOINT, {
+      const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}fetch`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

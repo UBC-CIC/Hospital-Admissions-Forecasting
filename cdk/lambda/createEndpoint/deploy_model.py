@@ -37,7 +37,7 @@ def lambda_handler(event, context):
         {
             'VariantName': 'AllTraffic',
             'ModelName': model_name,
-            'InstanceType': 'ml.m5.large',  # Change from Serverless to Real-Time
+            'InstanceType': 'ml.m5.large', 
             'InitialInstanceCount': 1
         }
     ]
