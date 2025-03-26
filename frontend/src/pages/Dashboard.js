@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import PatientTable from "../components/PatientTable";
-import AdmissionsChart from "../components/AdmissionsChart";
 import Clock from "../components/Clock.js";
 
 const Dashboard = () => {
