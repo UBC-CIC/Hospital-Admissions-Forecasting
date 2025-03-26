@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -7,6 +8,8 @@ const PatientTable = () => {
   const [filters, setFilters] = useState({ facility: "", urgency: "" });
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [lastUpdatedAt, setLastUpdatedAt] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 20;
 
   const fetchPatients = async () => {
     try {
@@ -22,11 +25,10 @@ const PatientTable = () => {
     }
   };
 
-  // Fetch on mount and set interval
   useEffect(() => {
     fetchPatients();
-    const intervalId = setInterval(fetchPatients, 5 * 60 * 1000); // 5 mins
-    return () => clearInterval(intervalId); // Cleanup
+    const intervalId = setInterval(fetchPatients, 5 * 60 * 1000); // Refresh every 5 minutes
+    return () => clearInterval(intervalId);
   }, []);
 
   const handleRefresh = () => {
@@ -36,6 +38,7 @@ const PatientTable = () => {
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
+    setCurrentPage(1); // Reset to first page on filter change
   };
 
   const handleSort = (key) => {
@@ -70,6 +73,18 @@ const PatientTable = () => {
         : true;
     return matchesFacility && matchesUrgency;
   });
+
+  const totalPages = Math.ceil(filteredPatients.length / recordsPerPage);
+  const currentPatients = filteredPatients.slice(
+    (currentPage - 1) * recordsPerPage,
+    currentPage * recordsPerPage
+  );
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -133,7 +148,7 @@ const PatientTable = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredPatients.map((patient) => (
+          {currentPatients.map((patient) => (
             <tr key={patient.v_guid} style={{ backgroundColor: getUrgencyColor(patient.modelscore) }}>
               <td
                 style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}
@@ -150,7 +165,30 @@ const PatientTable = () => {
         </tbody>
       </table>
 
-      {/* Last Updated timestamp */}
+      {/* Pagination */}
+      <div style={styles.pagination}>
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          style={styles.pageButton}
+        >
+          ◀ Prev
+        </button>
+
+        <span style={{ margin: "0 10px" }}>
+          Page {currentPage} of {totalPages}
+        </span>
+
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          style={styles.pageButton}
+        >
+          Next ▶
+        </button>
+      </div>
+
+      {/* Last Updated */}
       <p style={{ marginTop: "10px", fontStyle: "italic", color: "gray" }}>
         Last updated: {lastUpdatedAt ? formatDate(lastUpdatedAt) : "Loading..."}
       </p>
@@ -200,6 +238,20 @@ const styles = {
     cursor: "pointer",
     fontSize: "16px",
     marginLeft: "5px",
+  },
+  pagination: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: "10px",
+  },
+  pageButton: {
+    padding: "6px 12px",
+    margin: "0 5px",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
+    cursor: "pointer",
+    backgroundColor: "#f0f0f0",
   },
 };
 
