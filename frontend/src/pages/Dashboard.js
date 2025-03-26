@@ -81,10 +81,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Last Updated Time */}
-      <p style={styles.lastUpdated}>
-        Last updated: {lastUpdatedTime.toLocaleString()}
-      </p>
     </div>
   );
 };
