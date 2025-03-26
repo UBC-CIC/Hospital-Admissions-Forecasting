@@ -74,11 +74,6 @@ const Dashboard = () => {
           <PatientTable />
         </div>
 
-        {/* Daily Admissions Overview at the Bottom */}
-        <div style={styles.card}>
-          <div style={styles.cardTitle}>Daily Admissions Overview</div>
-          <AdmissionsChart />
-        </div>
       </div>
 
     </div>
