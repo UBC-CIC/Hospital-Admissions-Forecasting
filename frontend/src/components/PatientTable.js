@@ -167,7 +167,6 @@ const PatientTable = () => {
           ))}
         </tbody>
 
-        <UrgencyChart patients={patients} />
       </table>
 
       {/* Pagination */}
@@ -192,6 +191,8 @@ const PatientTable = () => {
           Next ▶
         </button>
       </div>
+
+      <UrgencyChart patients={patients} />
 
       {/* Last Updated */}
       <p style={{ marginTop: "10px", fontStyle: "italic", color: "gray" }}>
