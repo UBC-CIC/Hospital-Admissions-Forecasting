@@ -129,8 +129,6 @@ const PatientTable = () => {
         </div>
       </div>
 
-      <UrgencyChart patients={patients} />
-
 
       <table border="1" style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
@@ -168,6 +166,8 @@ const PatientTable = () => {
             </tr>
           ))}
         </tbody>
+
+        <UrgencyChart patients={patients} />
       </table>
 
       {/* Pagination */}
