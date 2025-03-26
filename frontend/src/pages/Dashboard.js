@@ -28,7 +28,7 @@ const Dashboard = () => {
     mainContent: {
       display: "flex",
       flexDirection: "column",
-      maxWidth: "1200px",
+      maxWidth: "1800px",
       margin: "0 auto",
       padding: "20px",
       gap: "30px",
