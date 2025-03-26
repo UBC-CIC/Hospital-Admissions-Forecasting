@@ -1,6 +1,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import UrgencyChart from "./UrgencyChart"; // Adjust the path as needed
+
 
 const PatientTable = () => {
   const navigate = useNavigate();
@@ -126,6 +128,9 @@ const PatientTable = () => {
           </button>
         </div>
       </div>
+
+      <UrgencyChart patients={patients} />
+
 
       <table border="1" style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
