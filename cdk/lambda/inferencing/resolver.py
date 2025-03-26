@@ -126,6 +126,8 @@ def store_prediction_in_db(v_guid, facility_id, reg_datetime, model_score):
             ON CONFLICT (V_GUID) 
             DO UPDATE SET 
                 ModelScore = EXCLUDED.ModelScore,
+                Facility_ID = EXCLUDED.Facility_ID,
+                RegistrationDateTime = EXCLUDED.RegistrationDateTime,
                 LastUpdated = CURRENT_TIMESTAMP;
         """, (v_guid, facility_id, reg_datetime, model_score))
 
@@ -178,7 +180,7 @@ def lambda_handler(event, context):
         except json.JSONDecodeError as e:
             raise ValueError(f"Failed to parse SageMaker response as JSON: {str(e)}")
 
-        # 🔹 Error Handling: Ensure Predictions Are Valid
+        # Error Handling: Ensure Predictions Are Valid
         if len(predictions) < len(df):
             raise ValueError("SageMaker returned fewer predictions than expected!")
 
@@ -212,27 +214,3 @@ def lambda_handler(event, context):
             "statusCode": 500,
             "error": str(e)
         }
-    #     result = inference_response["Body"].read().decode("utf-8")
-    #     print(f"SageMaker prediction response: {result}")
-
-    #     # Parse predictions and store in DB
-    #     predictions = result.split("\n")
-    #     for index, row in df.iterrows():
-    #         v_guid = row["V_GUID"]
-    #         facility_id = row["EDVisit.Facility_MisFacID"]
-    #         reg_datetime = row["EDVisit.RegistrationDateTime"]
-    #         model_score = float(predictions[index]) if index < len(predictions) else None
-            
-    #         store_prediction_in_db(v_guid, facility_id, reg_datetime, model_score)
-
-    #     return {
-    #         "statusCode": 200,
-    #         "body": "Predictions stored successfully."
-    #     }
-
-    # except Exception as e:
-    #     print(f"Error: {str(e)}")
-    #     return {
-    #         "statusCode": 500,
-    #         "error": str(e)
-    #     }
