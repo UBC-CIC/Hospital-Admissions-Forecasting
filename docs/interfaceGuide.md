@@ -14,7 +14,8 @@ page:
 Upon clicking the refresh button, the model score updates in real-time.
 
 The Current Patients table displays a list of patients, each identified by their unique `V_GUID`, `Facility ID`, `Registration Time`, and `Model Score`. Users can filter the table by Facility and Urgency to refine the displayed results. Users can also sort by `Registration Time` and `Model Score`.
-![halton_dashboard_UI_3](https://github.com/user-attachments/assets/b4330b40-772d-4a3e-a23c-73ca99abd260)
+![image](https://github.com/user-attachments/assets/e26ae06b-6a9c-44e4-8927-a6ca5716085a)
+
 
 At the bottom is a chart to see patients by `Urgency` (based on model score) and `Facility ID`. Hovering over each bar allows users to see the exact number of predictions distribution for each facility:
 <img width="1373" alt="halton_dashboard_UI_2" src="https://github.com/user-attachments/assets/ec013547-2ce0-4fe5-8061-e0e96f3ff129" />
