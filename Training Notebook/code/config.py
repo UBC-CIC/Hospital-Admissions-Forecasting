@@ -1,6 +1,12 @@
 model = "RF"
 # model = "XGB"
 
+training_s3_path = 's3://halton-ubc/model/' #change the path to the S3 bucket for model artifact output (same bucket that should trigger the endpoint creation lambda in deployment guide)
+
+data_bucket = 'halton-ubc'#where your training data is stored
+training_path = 'data/'#folder inside data bucket for training data csv
+
+
 xgb_parameters = {"tree_method":"hist", 'max_depth':10,'n_estimators': 100}
 rf_parameters = {"n_estimators": 100, 'max_features': 5, 'max_depth': 10}
 
