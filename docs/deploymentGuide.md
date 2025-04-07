@@ -188,6 +188,9 @@ SageMaker will train the model and save the trained artifacts to the specified S
 
 Once the training job is complete, SageMaker automatically generates a model.tar.gz file. This file contains the serialized model and any supporting files (e.g., tokenizer, config).
 
+*Note: Make sure you upload the `inference.py` and `requirements.txt` [link](https://github.com/UBC-CIC/Hospital-Admissions-Forecasting/tree/main/training%20files) to the training bucket before generating the trained model file as mentioned in the [training guide](https://github.com/UBC-CIC/Hospital-Admissions-Forecasting/blob/de358887cb097bb9e6819f02a5bdf859ba38b65d/docs/training-and-experimentation-guide.md).
+
+
 
 ### Step 4: CDK Deployment
 It's time to set up everything that goes on behind the scenes! For more information on how the backend works, feel free to refer to the Architecture Deep Dive, but an understanding of the backend is not necessary for deployment.
