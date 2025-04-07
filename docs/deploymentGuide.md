@@ -11,10 +11,9 @@
    - [Step 1: Fork \& Clone The Repository](#step-1-fork--clone-the-repository)
      - [Install Dependencies](#install-dependencies)
    - [Step 2: Upload Secrets](#step-2-upload-secrets)
-   - [Step 3: CDK Deployment](#step-3-cdk-deployment)
-     - [1: Navigate to the cdk directory](#1-navigate-to-the-cdk-directory)
-     - [3b: CDK Deployment](#3b-cdk-deployment)
-  - [Step 4: Deploying the Sagemaker Inference Endpoint](#step-4-Deploying-the-Sagemaker-Inference-Endpoint)
+   - [Step 3: Training the model](#step-3-Training-the-Model-and-Generating-model.tar.gz)
+   - [Step 4: CDK Deployment](#step-3-cdk-deployment)
+   - [Step 5: Deploying the Sagemaker Inference Endpoint](#step-4-Deploying-the-Sagemaker-Inference-Endpoint)
 - [Post-Deployment](#post-deployment)
    - [Step 1: Build AWS Amplify App](#step-1-build-aws-amplify-app)
    - [Step 2: Add Redirect](#step-2-add-redirect)
@@ -177,7 +176,20 @@ aws ssm put-parameter `
 ```
 </details>
 
-### Step 3: CDK Deployment
+### Step 3: Training the Model and Generating model.tar.gz
+Open the Jupyter Notebook in SageMaker Studio
+
+Upload and open the provided Training notebook in SageMaker Studio. 
+You can find the training notebook [here](https://github.com/UBC-CIC/Hospital-Admissions-Forecasting/tree/de358887cb097bb9e6819f02a5bdf859ba38b65d/Training%20Notebook).
+
+Run the Notebook to Train the Model. Refer to the [training guide](https://github.com/UBC-CIC/Hospital-Admissions-Forecasting/blob/de358887cb097bb9e6819f02a5bdf859ba38b65d/docs/training-and-experimentation-guide.md)
+
+SageMaker will train the model and save the trained artifacts to the specified S3 bucket. Retrieve the `model.tar.gz` File
+
+Once the training job is complete, SageMaker automatically generates a model.tar.gz file. This file contains the serialized model and any supporting files (e.g., tokenizer, config).
+
+
+### Step 4: CDK Deployment
 It's time to set up everything that goes on behind the scenes! For more information on how the backend works, feel free to refer to the Architecture Deep Dive, but an understanding of the backend is not necessary for deployment.
 
 Open a terminal in the `/cdk` directory.
@@ -208,7 +220,7 @@ cdk deploy --all --parameters halton-AmplifyStack:githubRepoName=Hospital-Admiss
 
 If you have trouble running the commands, try removing all the \ and run it in one line.
 
-### Step 4: Deploying the Sagemaker Inference Endpoint
+### Step 5: Deploying the Sagemaker Inference Endpoint
 1. Make sure you have the trained model artifact file (should be named `model.tar.gz`) with the inference script and requirements file.
 2. At the [AWS online console](https://console.aws.amazon.com/console/home), enter `S3` in the search bar.
 3. In the `Buckets` search bar enter `sagemaker` and click on the name of the bucket (the actual name will vary a bit but should have `model bucket` in its name). This is where you will upload the trained model artifact.
