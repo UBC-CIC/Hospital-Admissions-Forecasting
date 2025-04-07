@@ -16,7 +16,7 @@
 
 ## Overview
 
-This guide provides a description of training a model using triage data, viewing results, and choosing an appropriate model to deploy for the Sagemaker endpoint. These Jupyter files can be run on an `ml.t2.medium` Sagemaker notebook. Please find the data fields [here](./data_fields.md).
+This guide provides a description of training a model using triage data, viewing results, and choosing an appropriate model to deploy for the Sagemaker endpoint. These Jupyter files can be run on an `ml.t2.medium` Sagemaker notebook. Please find the data fields [here](./data_fields.md). 
 
 
 ## Directory Structure
@@ -39,6 +39,8 @@ The Sagemaker Jupyter Notebook contains the following files and folders:
 ## Usage Overview
 
 ### Preliminary Training and Testing of Models
+
+Before training and testing, csv data must be uploaded to an s3 bucket. This s3 bucket shall be specified in the config.py file in the /code/ folder. Please also upload the inference.py and requirements.txt [files](../training%20files/) to this s3 bucket along with your csv data as these will be used to create a sagemaker endpoint with inferencing for your final trained model.
 
 Preliminary training, testing, and experimentation can be done via the `Train_models_cv.ipynb` notebook, which runs cross-validation with a grid search to help the user understand the performance of models.
 
