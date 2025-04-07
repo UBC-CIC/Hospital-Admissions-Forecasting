@@ -227,12 +227,12 @@ If you have trouble running the commands, try removing all the \ and run it in o
 1. Make sure you have the trained model artifact file (should be named `model.tar.gz`) with the inference script and requirements file.
 2. At the [AWS online console](https://console.aws.amazon.com/console/home), enter `S3` in the search bar.
 3. In the `Buckets` search bar enter `sagemaker` and click on the name of the bucket (the actual name will vary a bit but should have `model bucket` in its name). This is where you will upload the trained model artifact.
-   ![image](https://github.com/user-attachments/assets/86b7459a-1f7c-4ce1-955c-3db4aa2c7763)
-4. In this bucket click `Upload`. Then, click `Add Files`. Add the trained model artifact file `model.tar.gz` and click `Upload` to complete the process.
-   ![image](https://github.com/user-attachments/assets/5336f1ee-da50-433d-8894-8282df2fd667)
+   ![Screenshot 2025-03-24 at 12 31 08 PM](https://github.com/user-attachments/assets/1f2d0929-12b8-40a7-a33f-023d1bcc093e)
+5. In this bucket click `Upload`. Then, click `Add Files`. Add the trained model artifact file `model.tar.gz` and click `Upload` to complete the process.
+   ![Screenshot 2025-03-24 at 12 25 58 PM](https://github.com/user-attachments/assets/f9b9adcd-7a08-44e3-8c9a-32502b9c3dcd)
 6. Once the upload is complete, click `Close`.
 7. At the [AWS online console](https://console.aws.amazon.com/console/home), enter `Amazon SageMaker AI`. Navigate to `Inference`, then `Endpoints`. Make sure the `medical-inference-endpoint` is `InService`.
-   ![image](https://github.com/user-attachments/assets/e74b2a63-995d-4538-8451-b9a4082091c2)
+   ![Screenshot 2025-03-24 at 12 31 08 PM](https://github.com/user-attachments/assets/92dcae42-e231-4fd2-8ea3-dd114b79f9fb)
 
 
 ## Post-Deployment
