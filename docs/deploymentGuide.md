@@ -40,6 +40,8 @@ Before you deploy, you must have the following softwares installed on your devic
 If you are on a Windows device, it is recommended to install the [Windows Subsystem For Linux](https://docs.microsoft.com/en-us/windows/wsl/install), which lets you run a Linux terminal on your Windows computer natively. Some of the steps will require its use. [Windows Terminal](https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701) is also recommended for using WSL.
 
 ## Pre-Deployment
+**Note**: This solution is designed for deployment in the `ca-central-1` AWS region. If you are using a different AWS region, please review the [Region-Specific Configuration Notes](#region-specific-configuration-notes) below before deployment.
+
 ### Create GitHub Personal Access Token
 To deploy this solution, you will need to generate a GitHub personal access token. Please visit [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic) for detailed instruction to create a personal access token.
 
@@ -222,6 +224,32 @@ cdk deploy --all --parameters halton-AmplifyStack:githubRepoName=Hospital-Admiss
 ```
 
 If you have trouble running the commands, try removing all the \ and run it in one line.
+
+#### **Region-Specific Configuration Notes**
+
+This solution is configured by default for the `ca-central-1` AWS region. If you are deploying in a different region (e.g., `us-west-2`), you must update the following items accordingly:
+
+1. **AWS Lambda Layer ARN (AWS SDK for Pandas)**:
+
+   - The Lambda function in this project uses a prebuilt AWS-managed Lambda layer for `awswrangler` (AWS SDK for Pandas).
+
+   - These ARNs are region-specific. The current reference uses the `ca-central-1` ARN:
+   `arn:aws:lambda:ca-central-1:336392948345:layer:AWSSDKPandas-Python39:2`
+
+   - If you're deploying in another region (e.g., `us-west-2`), change the ARN region part to match your deployment region. The account ID remains unchanged (`336392948345`).
+
+   - Here is a reference documentation for more information:
+   [AWS SDK for Pandas Lambda Layer Docs](https://aws-sdk-pandas.readthedocs.io/en/3.9.0/layers.html). 
+
+2. **SageMaker Container Image URI**:
+
+   - The SageMaker model in this project uses a prebuilt scikit-learn container image from a public AWS ECR.
+
+   - These URIs also vary by region. The current URI in use is for `ca-central-1`:
+   
+      `image_uri = '341280168497.dkr.ecr.ca-central-1.amazonaws.com/sagemaker-scikit-learn:1.2-1-cpu-py3'`
+
+   - For deployments outside of `ca-central-1`, refer to this documentation to find the correct container image URI for your region: [ SageMaker Container Registry Paths by Region](https://docs.aws.amazon.com/sagemaker/latest/dg-ecr-paths/sagemaker-algo-docker-registry-paths.html).
 
 ### Step 5: Deploying the Sagemaker Inference Endpoint
 1. Make sure you have the trained model artifact file (should be named `model.tar.gz`) with the inference script and requirements file.
