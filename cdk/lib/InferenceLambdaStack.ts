@@ -8,6 +8,7 @@ import * as rds from 'aws-cdk-lib/aws-rds';
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import { Construct } from 'constructs';
+import { Stack } from 'aws-cdk-lib';
 
 interface InferenceLambdaStackProps extends cdk.StackProps {
   sagemakerEndpointName: string;
@@ -36,10 +37,17 @@ export class InferenceLambdaStack extends cdk.Stack {
     });
 
 
+    const region = Stack.of(this).region;
+    const pandasLayerArn = `arn:aws:lambda:${region}:336392948345:layer:AWSSDKPandas-Python39:2`;
+
+    // AWS Data Wrangler (AWS SDK Pandas) Lambda layer
+    // Public layer published by AWS in account 336392948345
+    // Region must match deployment region
+    // Docs: https://aws-sdk-pandas.readthedocs.io/en/3.9.0/layers.html
     const pandasLayer = lambda.LayerVersion.fromLayerVersionArn(
       this,
       'PandasLayer',
-      'arn:aws:lambda:ca-central-1:336392948345:layer:AWSSDKPandas-Python39:2'
+      pandasLayerArn
     );
 
     // 🔹 Create the Inference Lambda Function (inside VPC)
