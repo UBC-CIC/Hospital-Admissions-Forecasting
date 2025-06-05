@@ -1,5 +1,6 @@
 import os
 import boto3
+import sagemaker
 sagemaker_client = boto3.client('sagemaker')
 # from sagemaker_client import image_uris
 
@@ -13,18 +14,23 @@ def lambda_handler(event, context):
     endpoint_config_name = 'my-endpoint-config'
     endpoint_name = 'medical-inference-endpoint'
 
-    # Region-specific public ECR image for SageMaker
-    # This URI is for ca-central-1 only.
-    # If deploying in a different region, update the account and region accordingly.
-    # Docs: https://docs.aws.amazon.com/sagemaker/latest/dg-ecr-paths/ecr-ca-central-1.html#sklearn-ca-central-1
-    image_uri = '341280168497.dkr.ecr.ca-central-1.amazonaws.com/sagemaker-scikit-learn:1.2-1-cpu-py3'
-
+    # Dynamically get region and image URI
+    region = boto3.Session().region_name
+    
+    # Retrieve region-specific SageMaker image URI dynamically.
+    # Docs: https://docs.aws.amazon.com/sagemaker/latest/dg/ecr-paths.html
+    image_uri = sagemaker.image_uris.retrieve(
+        framework='sklearn',
+        region=region,
+        version='1.2-1',
+        image_scope='inference'
+    )
     
     # Create a SageMaker model that points to your model data in S3.
     sagemaker_client.create_model(
         ModelName=model_name,
         PrimaryContainer={
-            'Image': image_uri,  # Replace with your container image URI
+            'Image': image_uri,
             'ModelDataUrl': f's3://{bucket}/{key}',
             'Environment': {
                 'SAGEMAKER_SUBMIT_DIRECTORY': '/opt/ml/model/',
